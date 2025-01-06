@@ -1,0 +1,8 @@
+starten:
+docker-compose up --build
+
+status:
+docker-compose ps
+
+Wish ueberpruefen:
+curl -X GET http://localhost:5000/wishes

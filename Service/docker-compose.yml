@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  api_gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+
+  wish_service:
+    build: ./wishes-service
+    ports:
+      - "5000:5000"
+    depends_on:
+      - wish_db
+
+  wish_db:
+    image: mongo
+    container_name: wish_db
+    ports:
+      - "27017:27017"
+
+  user_service:
+    build: ./benutzer-service
+    ports:
+      - "5001:5001"
+    depends_on:
+      - user_db
+
+  user_db:
+    image: mongo
+    container_name: user_db
+    ports:
+      - "27018:27017"
+
+  status_service:
+    build: ./status-service
+    ports:
+      - "5002:5002"
+    depends_on:
+      - status_db
+
+  status_db:
+    image: mongo
+    container_name: status_db
+    ports:
+      - "27019:27017"
+
+  front_end_logistics:
+    image: nginx:alpine
+    volumes:
+      - ./front-end-logistics:/usr/share/nginx/html
+    ports:
+      - "8081:80"
