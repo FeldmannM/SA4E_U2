@@ -45,13 +45,40 @@ public class XmasWishesRoute extends RouteBuilder {
             .split().body() // Jeder Wunsch wird einzeln verarbeitet
             .process(exchange -> {
                 Wish wish = exchange.getIn().getBody(Wish.class);
-                exchange.getIn().setBody(wish);
-                log.info("Wunsch verarbeitet: " + wish.getWish());
+                String namePayload = "{\"name\": \"" + wish.getName() + "\"}";
+                String wishPayload = "{\"wish\": \"" + wish.getWish() + "\"}";
+
+                // Speichere Payloads als Properties
+                exchange.setProperty("namePayload", namePayload);
+                exchange.setProperty("wishPayload", wishPayload);
+
+                log.info("Sende Name an users service: " + namePayload);
+                exchange.getIn().setBody(namePayload);
             })
-            .marshal().json() // Wunsch in JSON konvertieren
             .setHeader("Content-Type", constant("application/json"))
-            .to("http://localhost:8080/wishes") // URL des API-Gateways
+            .to("http://localhost:8080/users") // URL des API-Gateways für Benutzer
+            .log("Name erfolgreich gesendet: ${body}")
+
+            // Sende Wunsch an den API-Gateway
+            .process(exchange -> {
+                String wishPayload = exchange.getProperty("wishPayload", String.class);
+                log.info("Sende Wunsch an wishes service: " + wishPayload);
+                exchange.getIn().setBody(wishPayload);
+            })
+            .setHeader("Content-Type", constant("application/json"))
+            .to("http://localhost:8080/wishes") // URL des API-Gateways für Wünsche
             .log("Wunsch erfolgreich gesendet: ${body}")
+
+            // Sende Status "Formuliert" an den API-Gateway
+            .process(exchange -> {
+                String statusPayload = "{\"status\": \"Formuliert\"}";
+                log.info("Sende Status an status service: " + statusPayload);
+                exchange.getIn().setBody(statusPayload);
+            })
+            .setHeader("Content-Type", constant("application/json"))
+            .to("http://localhost:8080/status") // URL des API-Gateways für Status
+            .log("Status erfolgreich gesendet: ${body}")
+
             .end()
             .process(exchange -> {
                 // Beende das Programm nach dem Senden aller Wünsche

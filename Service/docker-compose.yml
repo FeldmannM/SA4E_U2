@@ -50,3 +50,10 @@ services:
       - ./front-end-logistics:/usr/share/nginx/html
     ports:
       - "8081:80"
+
+  santa:
+    image: nginx:alpine
+    volumes:
+      - ./santa:/usr/share/nginx/html
+    ports:
+      - "8082:80"

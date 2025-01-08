@@ -28,7 +28,7 @@
             margin-bottom: 10px;
             border-radius: 4px;
             border: 1px solid #ddd;
-			box-sizing: border-box;
+            box-sizing: border-box;
         }
         button {
             background-color: #28a745;
@@ -50,14 +50,34 @@
         async function submitWish() {
             const name = document.getElementById('name').value;
             const wish = document.getElementById('wish').value;
-            const response = await fetch('http://localhost:8080/wishes', {
+            
+            // Send name to user service
+            await fetch('http://localhost:8080/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name, wish })
+                body: JSON.stringify({ name })
             });
-            const result = await response.json();
+
+            // Send wish to wish service
+            await fetch('http://localhost:8080/wishes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ wish })
+            });
+
+            // Send status to status service
+            await fetch('http://localhost:8080/status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: 'Formuliert' })
+            });
+
             document.getElementById('message').innerText = 'Wish submitted successfully!';
         }
     </script>

@@ -1,50 +1,74 @@
 const statusOptions = ["Formuliert", "In Bearbeitung", "In der Auslieferung befindlich", "Unter dem Weihnachtsbaum"];
 
 async function fetchWishes() {
-    const response = await fetch('http://localhost:5000/wishes');
-    const wishes = await response.json();
+    try {
+        const wishesResponse = await fetch('http://localhost:5000/wishes');
+        const wishes = await wishesResponse.json();
+        console.log("Wishes:", wishes);
 
-    const tableBody = document.getElementById('wishesTableBody');
-    tableBody.innerHTML = '';
+        const statusResponse = await fetch('http://localhost:5002/status');
+        const statusList = await statusResponse.json();
+        console.log("Status:", statusList);
 
-    wishes.forEach((wish, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${wish.wish}</td>
-            <td>${wish.status}</td>
-            <td>
-                <button onclick="changeStatus('${wish._id}', -1)">-</button>
-                <button onclick="changeStatus('${wish._id}', 1)">+</button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
+        const tableBody = document.getElementById('wishesTableBody');
+        tableBody.innerHTML = '';
+
+        wishes.forEach((wish, index) => {
+            const statusItem = statusList[index];
+            if (statusItem) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${wish.wish}</td>
+                    <td>${statusItem.status}</td>
+                    <td>
+                        <button onclick="changeStatus('${statusItem._id}', -1)">-</button>
+                        <button onclick="changeStatus('${statusItem._id}', 1)">+</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            }
+        });
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Daten:', error);
+    }
 }
 
-async function changeStatus(wishId, direction) {
-    const response = await fetch('http://localhost:5000/wishes');
-    const wishes = await response.json();
-    const wish = wishes.find(w => w._id === wishId);
-    let currentStatusIndex = statusOptions.indexOf(wish.status);
+async function changeStatus(statusId, direction) {
+    try {
+        console.log("Statusänderung für ID:", statusId, "Richtung:", direction);
 
-    if (currentStatusIndex === -1) return;
+        const statusResponse = await fetch('http://localhost:5002/status');
+        const statusList = await statusResponse.json();
+        console.log("Statusliste:", statusList);
 
-    currentStatusIndex += direction;
-    if (currentStatusIndex < 0) currentStatusIndex = 0;
-    if (currentStatusIndex >= statusOptions.length) currentStatusIndex = statusOptions.length - 1;
+        const statusItem = statusList.find(s => s._id === statusId);
+        console.log("Statusitem:", statusItem);
 
-    const newStatus = statusOptions[currentStatusIndex];
+        let currentStatusIndex = statusOptions.indexOf(statusItem.status);
+        console.log("Aktueller Statusindex:", currentStatusIndex);
 
-    await fetch(`http://localhost:5000/wishes/${wishId}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ status: newStatus })
-    });
+        if (currentStatusIndex === -1) return;
 
-    fetchWishes();
+        currentStatusIndex += direction;
+        if (currentStatusIndex < 0) currentStatusIndex = 0;
+        if (currentStatusIndex >= statusOptions.length) currentStatusIndex = statusOptions.length - 1;
+
+        const newStatus = statusOptions[currentStatusIndex];
+        console.log("Neuer Status:", newStatus);
+
+        await fetch(`http://localhost:5002/status/${statusId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: newStatus })
+        });
+
+        fetchWishes(); // Status aktualisieren und Tabelle neu rendern
+    } catch (error) {
+        console.error('Fehler beim Ändern des Status:', error);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', fetchWishes);
