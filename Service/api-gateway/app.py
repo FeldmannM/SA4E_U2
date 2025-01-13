@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify, send_from_directory
 import requests
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def serve_index():
@@ -53,5 +55,21 @@ def get_status():
     response = requests.get('http://status_service:5002/status')
     return jsonify(response.json())
 
+@app.route('/wishes/<wish_id>', methods=['DELETE'])
+def delete_wish(wish_id):
+    response = requests.delete(f'http://wish_service:5000/wishes/{wish_id}')
+    return jsonify(response.json())
+
+@app.route('/users/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    response = requests.delete(f'http://user_service:5001/users/{user_id}')
+    return jsonify(response.json())
+
+@app.route('/status/<status_id>', methods=['DELETE'])
+def delete_status(status_id):
+    response = requests.delete(f'http://status_service:5002/status/{status_id}')
+    return jsonify(response.json())
+
+	
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)

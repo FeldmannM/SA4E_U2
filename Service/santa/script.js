@@ -1,12 +1,12 @@
 async function fetchWishesForSanta() {
     try {
-        const wishesResponse = await fetch('http://localhost:5000/wishes');
+        const wishesResponse = await fetch('http://localhost:8080/wishes');
         const wishes = await wishesResponse.json();
 
-        const usersResponse = await fetch('http://localhost:5001/users');
+        const usersResponse = await fetch('http://localhost:8080/users');
         const users = await usersResponse.json();
 
-        const statusResponse = await fetch('http://localhost:5002/status');
+        const statusResponse = await fetch('http://localhost:8080/status');
         const statusList = await statusResponse.json();
 
         console.log("Wishes:", wishes);
@@ -41,17 +41,17 @@ async function fetchWishesForSanta() {
 async function deleteWish(wishId, userId, statusId) {
     try {
         // Lösche den Wunsch
-        await fetch(`http://localhost:5000/wishes/${wishId}`, {
+        await fetch(`http://localhost:8080/wishes/${wishId}`, {
             method: 'DELETE',
         });
 
         // Lösche den Benutzer
-        await fetch(`http://localhost:5001/users/${userId}`, {
+        await fetch(`http://localhost:8080/users/${userId}`, {
             method: 'DELETE',
         });
 
         // Lösche den Status
-        await fetch(`http://localhost:5002/status/${statusId}`, {
+        await fetch(`http://localhost:8080/status/${statusId}`, {
             method: 'DELETE',
         });
 

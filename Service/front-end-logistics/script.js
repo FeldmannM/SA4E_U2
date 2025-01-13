@@ -2,11 +2,11 @@ const statusOptions = ["Formuliert", "In Bearbeitung", "In der Auslieferung befi
 
 async function fetchWishes() {
     try {
-        const wishesResponse = await fetch('http://localhost:5000/wishes');
+        const wishesResponse = await fetch('http://localhost:8080/wishes');
         const wishes = await wishesResponse.json();
         console.log("Wishes:", wishes);
 
-        const statusResponse = await fetch('http://localhost:5002/status');
+        const statusResponse = await fetch('http://localhost:8080/status');
         const statusList = await statusResponse.json();
         console.log("Status:", statusList);
 
@@ -38,7 +38,7 @@ async function changeStatus(statusId, direction) {
     try {
         console.log("Statusänderung für ID:", statusId, "Richtung:", direction);
 
-        const statusResponse = await fetch('http://localhost:5002/status');
+        const statusResponse = await fetch('http://localhost:8080/status');
         const statusList = await statusResponse.json();
         console.log("Statusliste:", statusList);
 
