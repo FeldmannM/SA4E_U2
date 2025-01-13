@@ -71,4 +71,6 @@ async function changeStatus(statusId, direction) {
     }
 }
 
+setInterval(fetchWishes, 30000);
+
 document.addEventListener('DOMContentLoaded', fetchWishes);

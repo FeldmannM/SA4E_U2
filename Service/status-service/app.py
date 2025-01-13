@@ -29,5 +29,10 @@ def update_status(status_id):
     mongo.db.status.update_one({'_id': ObjectId(status_id)}, {'$set': {'status': new_status}})
     return jsonify({"message": "Status updated successfully!"}), 200
 
+@app.route('/status/<status_id>', methods=['DELETE'])
+def delete_status(status_id):
+    mongo.db.status.delete_one({'_id': ObjectId(status_id)})
+    return jsonify({"message": "Status deleted successfully!"}), 200
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002)
