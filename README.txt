@@ -13,8 +13,10 @@ DB mit den Wünschen:	http://localhost:5000/wishes
 DB mit den Nutzern:	http://localhost:5001/users
 DB mit dem Status:	http://localhost:5002/status
 
-Um einen API-Call-Test auszuführen verwenden Sie bitte den folgenden Befehl im Ordner APICallRate:
-python api_call_rate_api.py
+Um einen API-Call-Test fürs Lesen & Schreiben auszuführen verwenden Sie bitte den folgenden Befehl im Ordner APICallRate:
+python api_call_rate_api_combined.py
+Um einen API-Call-Test nur fürs Lesen auszuführen verwenden Sie bitte den folgenden Befehl im Ordner APICallRate:
+python api_call_rate_api_read.py
 
 Um die Apache Camel Anwendung zu starten können Sie im Ordner PaperWish die Anwendung einmal bei Ihnen mit Gradle builden:
 gradle build
@@ -22,6 +24,7 @@ Da ich schon eine gebuildete Version mithochgeladen habe, sollte normalerweise d
 gradle run
 Ich habe Gradle verwendet, damit die Abhängigkeiten für Apache Camel automatisch gezogen werden.
 
-
 Weitere interessante Befehle z.B. zur Übersicht von Docker sind in den Befehle.txt Dateien.
+
+Die PowerPoint-Präsentation mit Videos befindet sich auch in dieser Abgabe.
 

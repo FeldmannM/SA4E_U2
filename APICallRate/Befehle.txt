@@ -1,4 +1,4 @@
-API-Test starten:
-python api_call_rate_api.py
-DB-Test starten:
-python api_call_rate_db.py
+API-Test fuer Lesen und Schreiben starten:
+python api_call_rate_api_combined.py
+API-Test fuer Lesen starten:
+python api_call_rate_api_read.py
