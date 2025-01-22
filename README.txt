@@ -13,6 +13,7 @@ DB mit den Wünschen:	http://localhost:5000/wishes
 DB mit den Nutzern:	http://localhost:5001/users
 DB mit dem Status:	http://localhost:5002/status
 
+Empfehlenswert ist es den API-Call-Test erst nach der Apache Camel Anwendung auszuführen, da der Schreibtest die Datenbank füllt.
 Um einen API-Call-Test fürs Lesen & Schreiben auszuführen verwenden Sie bitte den folgenden Befehl im Ordner APICallRate:
 python api_call_rate_api_combined.py
 Um einen API-Call-Test nur fürs Lesen auszuführen verwenden Sie bitte den folgenden Befehl im Ordner APICallRate:
